@@ -1,0 +1,14 @@
+{
+  "name": "matters-town-curation",
+  "workspaces": [
+    "packages/frontend",
+    "packages/backend"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.3.2",
+    "create-next-app": "^14.1.2",
+    "lerna": "^8.1.2"
+  }
+}
