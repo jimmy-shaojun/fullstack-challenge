@@ -1,0 +1,241 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type EthBlock {
+  """Database Id of this block"""
+  id: BigInt!
+
+  """Block Number"""
+  chainId: BigInt!
+
+  """Block Number"""
+  blockNumber: BigInt!
+
+  """Hash of the block"""
+  hash: String!
+
+  """Hash of the parent block"""
+  parentHash: String!
+
+  """The unix timestamp for when the block was collated"""
+  timestamp: String!
+
+  """Nonce of the block"""
+  nonce: BigInt!
+
+  """The “extra data” field of this block"""
+  extraData: String!
+
+  """Integer the size of this block in bytes."""
+  size: Int!
+}
+
+type Erc20Token {
+  """Database Id of this token"""
+  id: BigInt!
+
+  """chainId identifies which chain this token belongs to"""
+  chainId: Int!
+
+  """
+  If contractAddress is 0x0, it means native currency, otherwise, it is erc20 token
+  """
+  contractAddress: String!
+
+  """Name of this erc20 token"""
+  name: String!
+
+  """Symbol of this erc20 token, e.g., USDT"""
+  symbol: String!
+
+  """total supply of this erc20 token"""
+  totalSupply: BigInt!
+
+  """Example field (placeholder)"""
+  decimals: Int!
+}
+
+type CurationEvent {
+  """Database Id of this curation event"""
+  id: BigInt!
+
+  """Transaction Hash of the transaction that this event is associated with"""
+  txnHash: String!
+
+  """Log Index of this event"""
+  logIndex: Int!
+
+  """The sender of this curation event"""
+  from: String!
+
+  """The receiver of this curation event"""
+  to: String!
+
+  """Uri, specifically, a CID of IPFS"""
+  uri: String!
+
+  """the token"""
+  token: Erc20Token!
+
+  """the amount of transaction"""
+  amount: BigInt!
+
+  """the total amount after apply token decimals"""
+  amountInDecimals: String!
+
+  """the total amount after applying decimals and token symbol"""
+  formattedAmount: String!
+
+  """Block Number associated with this event"""
+  blockNumber: BigInt!
+
+  """date and time that this event occured"""
+  date: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type BeneficiaryStats {
+  """The writer/to who gets rewards from "from"/sponsor for its content"""
+  beneficiary: String!
+
+  """
+  the date from which, inclusive, we compute statistics of sponsor givings
+  """
+  fromDate: DateTime!
+
+  """
+  the date to which, non-inclusive, we compute statistics of sponsor givings
+  """
+  toDate: DateTime!
+
+  """the token"""
+  token: Erc20Token!
+
+  """the total amount of receiving"""
+  amount: BigInt!
+
+  """the total amount after apply token decimals"""
+  amountInDecimals: String!
+
+  """the total amount after applying decimals and token symbol"""
+  formattedAmount: String!
+}
+
+type SponsorStats {
+  """The sender/from who rewards "to" some tokens for its content"""
+  sponsor: String!
+
+  """
+  the date from which, inclusive, we compute statistics of sponsor givings
+  """
+  fromDate: DateTime!
+
+  """
+  the date to which, non-inclusive, we compute statistics of sponsor givings
+  """
+  toDate: DateTime!
+
+  """the token"""
+  token: Erc20Token!
+
+  """the total amount of giving"""
+  amount: BigInt!
+
+  """the total amount after apply token decimals"""
+  amountInDecimals: String!
+
+  """the total amount after applying decimals and token symbol"""
+  formattedAmount: String!
+}
+
+"""bigint to support uint256"""
+scalar BigInt
+
+type Query {
+  allCurationEvents: [CurationEvent!]!
+  findCurationEvents(
+    """from of the CurationEvent"""
+    sender: String
+
+    """to of the CurationEvent"""
+    receiver: String
+
+    """CurationEvents should occur after `from` date, inclusive"""
+    from: DateTime
+
+    """CurationEvents should occur before `to` date, non-inclusive"""
+    to: DateTime
+  ): [CurationEvent!]!
+  curationEvent(id: BigInt!): CurationEvent!
+  sponsorStats(
+    """
+    CurationEvents that are used to calculate stats should occur after `from` date, inclusive
+    """
+    from: DateTime!
+
+    """
+    CurationEvents that are used to calculate stats should occur before `to` date, non-inclusive
+    """
+    to: DateTime!
+  ): [SponsorStats!]!
+  beneficiaryStats(
+    """
+    CurationEvents that are used to calculate stats should occur after `from` date, inclusive
+    """
+    from: DateTime!
+
+    """
+    CurationEvents that are used to calculate stats should occur before `to` date, non-inclusive
+    """
+    to: DateTime!
+  ): [BeneficiaryStats!]!
+  allErc20Tokens: [Erc20Token!]!
+  erc20Token(id: BigInt!): Erc20Token!
+  erc20TokenByContractAddress(contractAddress: String!): Erc20Token!
+  allEthBlocks: [EthBlock!]!
+  ethBlock(id: BigInt!): EthBlock!
+  ethBlockByBlockNumber(blockNumber: BigInt!): EthBlock!
+}
+
+type Mutation {
+  createCurationEvent(createCurationEventInput: CreateCurationEventInput!): CurationEvent!
+  createErc20Token(createErc20TokenInput: CreateErc20TokenInput!): Erc20Token!
+}
+
+input CreateCurationEventInput {
+  """Transaction Hash of the transaction that this event is associated with"""
+  txnHash: String!
+
+  """Log Index of this event"""
+  logIndex: BigInt!
+
+  """The sender of this curation event"""
+  from: String!
+
+  """The receiver of this curation event"""
+  to: String!
+
+  """Uri, specifically, a CID of IPFS"""
+  uri: String!
+
+  """contractAddress of the token"""
+  tokenContractAddress: String!
+
+  """the amount token"""
+  amount: BigInt!
+
+  """Block Number associated with this event"""
+  blockNumber: BigInt!
+}
+
+input CreateErc20TokenInput {
+  """
+  If contractAddress is 0x0, it means native currency, otherwise, it is erc20 token
+  """
+  contractAddress: String!
+}

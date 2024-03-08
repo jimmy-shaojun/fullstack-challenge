@@ -16,3 +16,7 @@ The architecture diagram of Matters.Town can be found [here](https://github.com/
 ## 3. Personal interest
 
 Please tell us about a project you are currently working on or learning about. Why do you find it interesting, and what is the most effective way for you to work on it or learn about it?
+
+# Response to above
+
+TODO
