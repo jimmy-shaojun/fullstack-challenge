@@ -75,6 +75,7 @@ First, start an instance of postgres.
 This repo already provides a compose.yml to start a postgres:16 instance with user/password postgres/postgres and `./pgdata` as volume.
 
 ```bash
+> mkdir pgdata
 > docker-compose up
 ```
 
