@@ -104,7 +104,10 @@ Launch ipfs, backend and frontend
 In Terminal 1
 
 ```bash
-# in /home/user/fullstack-challenge
+# in /home/user/fullstack-challenge, build the workspace
+# the below build command will build frontend, backend and ipfs
+> npm run build
+# then launch ipfs
 > npm run ipfs:prod
 ```
 

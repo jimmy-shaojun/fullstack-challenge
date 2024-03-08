@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "frontend:dev": "cd packages/frontend && npm run dev",
-    "backend:dev": "cd packages/backend && npm run dev --workspaces",
+    "backend:dev": "cd packages/backend && npm run start:dev --workspaces",
     "ipfs:prod": "cd packages/ipfs && npm run start:prod",
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
