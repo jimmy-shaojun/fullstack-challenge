@@ -161,3 +161,7 @@ You may use the following .vscode/launch.json
     ]
 }
 ```
+
+## Written Challenge
+
+See [Written Challenge](./WrittenChallenge.md)
