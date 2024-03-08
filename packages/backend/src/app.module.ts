@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CurationEventModule } from './curation-event/curation-event.module';
-import { Erc20TokenModule } from './erc20-token/erc20-token.module';
-import { EthBlockModule } from './eth-block/eth-block.module';
-import { BigIntScalar } from './graphql/scalars/bigint.scalar';
+import { CurationEventModule } from './curation-event/curation-event.module.js';
+import { Erc20TokenModule } from './erc20-token/erc20-token.module.js';
+import { EthBlockModule } from './eth-block/eth-block.module.js';
+import { BigIntScalar } from './graphql/scalars/bigint.scalar.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSourceConfig } from './data-source';
-import { IpfsController } from './ipfs.controller';
+import { DataSourceConfig } from './data-source.js';
+import { IpfsController } from './ipfs.controller.js';
+import { IpfsService } from './ipfs.service.js';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { IpfsController } from './ipfs.controller';
     EthBlockModule,
   ],
   controllers: [AppController, IpfsController],
-  providers: [AppService, BigIntScalar],
+  providers: [AppService, IpfsService, BigIntScalar],
 })
 export class AppModule {}

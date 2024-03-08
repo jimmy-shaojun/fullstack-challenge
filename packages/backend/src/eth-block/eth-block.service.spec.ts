@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EthBlockService } from './eth-block.service';
+import { EthBlockService } from './eth-block.service.js';
 import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EthBlock } from './entities/eth-block.entity';
+import { EthBlock } from './entities/eth-block.entity.js';
 import { Repository } from 'typeorm';
-import { Web3Provider } from '../web3/web3.provider';
+import { Web3Provider } from '../web3/web3.provider.js';
 import Web3 from 'web3';
 
 describe('EthBlockService', () => {

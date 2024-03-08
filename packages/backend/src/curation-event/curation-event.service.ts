@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCurationEventInput } from './dto/create-curation-event.input';
+import { CreateCurationEventInput } from './dto/create-curation-event.input.js';
 import Web3, { EventLog } from 'web3';
 import { ConfigService } from '@nestjs/config';
-import contractAbi from '../web3/curation.abi';
+import contractAbi from '../web3/curation.abi.js';
 import { LogsSubscription } from 'web3-eth-contract';
-import { EthBlockService } from '../eth-block/eth-block.service';
-import { Erc20TokenService } from '../erc20-token/erc20-token.service';
-import { CurationEvent } from './entities/curation-event.entity';
+import { EthBlockService } from '../eth-block/eth-block.service.js';
+import { Erc20TokenService } from '../erc20-token/erc20-token.service.js';
+import { CurationEvent } from './entities/curation-event.entity.js';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere, Raw, Repository } from 'typeorm';
+import { BeneficiaryStats } from './entities/beneficiary-stats.entity.js';
+import { SponsorStats } from './entities/sponsor-stats.entity.js';
+import { Erc20Token } from '../erc20-token/entities/erc20-token.entity.js';
+import { formatErc20TokenAmount } from '../web3/utils.js';
 
 @Injectable()
 export class CurationEventService {
@@ -99,11 +103,126 @@ export class CurationEventService {
     return this.curationEventRepository.save(curationEvent);
   }
 
-  findAll() {
-    return this.curationEventRepository.find();
+  private formatAmounts(curationEvents: CurationEvent[]) {
+    return curationEvents.map((c) => {
+      c.amountInDecimals = formatErc20TokenAmount(`${c.amount}`, c.token.decimals);
+      c.formattedAmount = `${c.token.symbol} ${c.amountInDecimals}`;
+      return c;
+    })
+  }
+
+  async findAll() {
+    return this.formatAmounts(await this.curationEventRepository.find());
   }
 
   async findOne(id: bigint) {
-    return this.curationEventRepository.findOneBy({ id });
+    return this.formatAmounts([await this.curationEventRepository.findOneBy({ id })])[0];
+  }
+
+  async find(sender?: string, receiver?: string,from?: Date, to?: Date) {
+    const findWhereOptions: FindOptionsWhere<CurationEvent> = {}
+    if (sender) {
+      findWhereOptions.from = sender;
+    }
+    if (receiver) {
+      findWhereOptions.to = receiver;
+    }
+    if(from || to) {
+      findWhereOptions.date = Raw( () => {
+        const fromExpr = from?`date >= '${from.toISOString()}'`:undefined;
+        const toExpr = to?`date <= '${to.toISOString()}'`:undefined;
+        return [fromExpr, toExpr].filter(e => e !== undefined).join(' AND ')
+      })
+    }
+
+    const findOrderOption: FindOptionsOrder<CurationEvent> = {
+      date: "DESC"
+    }
+
+    return this.formatAmounts(await this.curationEventRepository.find({ 
+      where: findWhereOptions,
+      order: findOrderOption,
+    }));
+  }
+
+  async findBySender(sender: string) {
+    return this.formatAmounts(await this.curationEventRepository.findBy({ from: sender }));
+  }
+
+  async findByReceiver(receiver: string) {
+    return this.formatAmounts(await this.curationEventRepository.findBy({ to: receiver }));
+  }
+
+
+  async beneficiaryStats(from: Date, to: Date): Promise<BeneficiaryStats[]> {
+    const stats = await this.curationEventRepository.manager.query(`
+    WITH stats AS 
+    (SELECT "to" as "beneficiary", "tokenId", sum("amount") as total_amount
+    FROM "curation_event" 
+    WHERE date >=$1 AND date <= $2 
+    GROUP BY "beneficiary", "tokenId")
+
+    SELECT stats.*,
+    "erc20_token"."name", "erc20_token"."symbol", "erc20_token"."decimals","erc20_token"."chainId", "erc20_token"."contractAddress","erc20_token"."totalSupply"
+    FROM stats INNER JOIN "erc20_token" ON stats."tokenId" = "erc20_token"."id"
+    ORDER BY total_amount DESC
+    `, [from, to]);
+
+    const beneficiaryStats: BeneficiaryStats[] = stats.map((row) => {
+      const b = new BeneficiaryStats();
+      b.token = new Erc20Token();
+      b.beneficiary = row.beneficiary
+      b.fromDate = from;
+      b.toDate = to;
+      b.amount = row.total_amount;
+      b.token.id = row.tokenId;
+      b.token.chainId = row.chainId;
+      b.token.contractAddress = row.contractAddress;
+      b.token.name = row.name;
+      b.token.decimals = row.decimals;
+      b.token.symbol = row.symbol;
+      b.token.totalSupply = row.totalSupply;
+      b.amountInDecimals = formatErc20TokenAmount(`${b.amount}`, b.token.decimals);
+      b.formattedAmount = `${b.token.symbol} ${b.amountInDecimals}`;
+      return b;
+    });
+
+    return beneficiaryStats;
+  }
+
+  async sponsorStats(from: Date, to: Date): Promise<SponsorStats[]> {
+    const stats = await this.curationEventRepository.manager.query(`
+    WITH stats AS 
+    (SELECT "from" as "sponsor", "tokenId", sum("amount") as total_amount
+    FROM "curation_event" 
+    WHERE date >=$1 AND date <= $2 
+    GROUP BY "sponsor", "tokenId")
+
+    SELECT stats.*,
+    "erc20_token"."name", "erc20_token"."symbol", "erc20_token"."decimals","erc20_token"."chainId", "erc20_token"."contractAddress","erc20_token"."totalSupply"
+    FROM stats INNER JOIN "erc20_token" ON stats."tokenId" = "erc20_token"."id"
+    ORDER BY total_amount DESC
+    `, [from, to]);
+
+    const sponsorStats: SponsorStats[] = stats.map((row) => {
+      const b = new SponsorStats();
+      b.token = new Erc20Token();
+      b.sponsor = row.sponsor;
+      b.fromDate = from;
+      b.toDate = to;
+      b.amount = row.total_amount;
+      b.token.id = row.tokenId;
+      b.token.chainId = row.chainId;
+      b.token.contractAddress = row.contractAddress;
+      b.token.name = row.name;
+      b.token.decimals = row.decimals;
+      b.token.symbol = row.symbol;
+      b.token.totalSupply = row.totalSupply;
+      b.amountInDecimals = formatErc20TokenAmount(`${b.amount}`, b.token.decimals);
+      b.formattedAmount = `${b.token.symbol} ${b.amountInDecimals}`;
+      return b;
+    });
+
+    return sponsorStats;
   }
 }

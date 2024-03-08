@@ -1,6 +1,6 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
-import { EthBlockService } from './eth-block.service';
-import { EthBlock } from './entities/eth-block.entity';
+import { EthBlockService } from './eth-block.service.js';
+import { EthBlock } from './entities/eth-block.entity.js';
 
 @Resolver(() => EthBlock)
 export class EthBlockResolver {

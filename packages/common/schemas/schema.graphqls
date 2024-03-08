@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type EthBlock {
-  """Database Id of this token"""
+  """Database Id of this block"""
   id: BigInt!
 
   """Block Number"""
@@ -57,7 +57,7 @@ type Erc20Token {
 }
 
 type CurationEvent {
-  """Database Id of this token"""
+  """Database Id of this curation event"""
   id: BigInt!
 
   """Transaction Hash of the transaction that this event is associated with"""
@@ -78,8 +78,14 @@ type CurationEvent {
   """the token"""
   token: Erc20Token!
 
-  """the amount token"""
+  """the amount of transaction"""
   amount: BigInt!
+
+  """the total amount after apply token decimals"""
+  amountInDecimals: String!
+
+  """the total amount after applying decimals and token symbol"""
+  formattedAmount: String!
 
   """Block Number associated with this event"""
   blockNumber: BigInt!
@@ -93,12 +99,101 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type BeneficiaryStats {
+  """The writer/to who gets rewards from "from"/sponsor for its content"""
+  beneficiary: String!
+
+  """
+  the date from which, inclusive, we compute statistics of sponsor givings
+  """
+  fromDate: DateTime!
+
+  """
+  the date to which, non-inclusive, we compute statistics of sponsor givings
+  """
+  toDate: DateTime!
+
+  """the token"""
+  token: Erc20Token!
+
+  """the total amount of receiving"""
+  amount: BigInt!
+
+  """the total amount after apply token decimals"""
+  amountInDecimals: String!
+
+  """the total amount after applying decimals and token symbol"""
+  formattedAmount: String!
+}
+
+type SponsorStats {
+  """The sender/from who rewards "to" some tokens for its content"""
+  sponsor: String!
+
+  """
+  the date from which, inclusive, we compute statistics of sponsor givings
+  """
+  fromDate: DateTime!
+
+  """
+  the date to which, non-inclusive, we compute statistics of sponsor givings
+  """
+  toDate: DateTime!
+
+  """the token"""
+  token: Erc20Token!
+
+  """the total amount of giving"""
+  amount: BigInt!
+
+  """the total amount after apply token decimals"""
+  amountInDecimals: String!
+
+  """the total amount after applying decimals and token symbol"""
+  formattedAmount: String!
+}
+
 """bigint to support uint256"""
 scalar BigInt
 
 type Query {
   allCurationEvents: [CurationEvent!]!
+  findCurationEvents(
+    """from of the CurationEvent"""
+    sender: String
+
+    """to of the CurationEvent"""
+    receiver: String
+
+    """CurationEvents should occur after `from` date, inclusive"""
+    from: DateTime
+
+    """CurationEvents should occur before `to` date, non-inclusive"""
+    to: DateTime
+  ): [CurationEvent!]!
   curationEvent(id: BigInt!): CurationEvent!
+  sponsorStats(
+    """
+    CurationEvents that are used to calculate stats should occur after `from` date, inclusive
+    """
+    from: DateTime!
+
+    """
+    CurationEvents that are used to calculate stats should occur before `to` date, non-inclusive
+    """
+    to: DateTime!
+  ): [SponsorStats!]!
+  beneficiaryStats(
+    """
+    CurationEvents that are used to calculate stats should occur after `from` date, inclusive
+    """
+    from: DateTime!
+
+    """
+    CurationEvents that are used to calculate stats should occur before `to` date, non-inclusive
+    """
+    to: DateTime!
+  ): [BeneficiaryStats!]!
   allErc20Tokens: [Erc20Token!]!
   erc20Token(id: BigInt!): Erc20Token!
   erc20TokenByContractAddress(contractAddress: String!): Erc20Token!

@@ -1,5 +1,9 @@
 import { ConfigService } from '@nestjs/config';
+import path from 'path';
 import { DataSourceOptions } from 'typeorm';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const DataSourceConfig = (configService: ConfigService) => {
   return {

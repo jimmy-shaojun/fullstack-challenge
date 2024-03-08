@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { Erc20TokenService } from './erc20-token.service';
-import { Erc20Token } from './entities/erc20-token.entity';
-import { CreateErc20TokenInput } from './dto/create-erc20-token.input';
+import { Erc20TokenService } from './erc20-token.service.js';
+import { Erc20Token } from './entities/erc20-token.entity.js';
+import { CreateErc20TokenInput } from './dto/create-erc20-token.input.js';
 
 @Resolver(() => Erc20Token)
 export class Erc20TokenResolver {

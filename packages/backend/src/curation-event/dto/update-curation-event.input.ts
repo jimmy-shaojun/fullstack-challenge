@@ -1,4 +1,4 @@
-import { CreateCurationEventInput } from './create-curation-event.input';
+import { CreateCurationEventInput } from './create-curation-event.input.js';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()

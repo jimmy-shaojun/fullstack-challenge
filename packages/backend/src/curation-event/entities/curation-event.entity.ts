@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Erc20Token } from '../../erc20-token/entities/erc20-token.entity';
+import { Erc20Token } from '../../erc20-token/entities/erc20-token.entity.js';
 import {
   Column,
   Entity,
@@ -14,7 +14,7 @@ import {
 export class CurationEvent {
   @PrimaryGeneratedColumn('identity')
   @Field(() => BigInt, {
-    description: 'Database Id of this token',
+    description: 'Database Id of this curation event',
   })
   id: bigint;
 
@@ -46,8 +46,14 @@ export class CurationEvent {
   token: Erc20Token;
 
   @Column({ type: 'numeric', precision: 78, scale: 0 })
-  @Field(() => BigInt, { description: 'the amount token' })
+  @Field(() => BigInt, { description: 'the amount of transaction' })
   amount: bigint;
+
+  @Field(() => String, { description: 'the total amount after apply token decimals' })
+  amountInDecimals: string;
+
+  @Field(() => String, { description: 'the total amount after applying decimals and token symbol' })
+  formattedAmount: string;
 
   @Column({ type: 'numeric', precision: 32, scale: 0 })
   @Field(() => BigInt, {

@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { NativeCurrencyContractAddress } from '../entities/erc20-token.entity';
+import { NativeCurrencyContractAddress } from '../entities/erc20-token.entity.js';
 
 @InputType()
 export class CreateErc20TokenInput {

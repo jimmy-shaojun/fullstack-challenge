@@ -8,7 +8,7 @@ import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 export class EthBlock {
   @PrimaryGeneratedColumn('identity')
   @Field(() => BigInt, {
-    description: 'Database Id of this token',
+    description: 'Database Id of this block',
   })
   id: bigint;
 

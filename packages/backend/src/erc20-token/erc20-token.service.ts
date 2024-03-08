@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateErc20TokenInput } from './dto/create-erc20-token.input';
-import { Erc20Token } from './entities/erc20-token.entity';
+import { CreateErc20TokenInput } from './dto/create-erc20-token.input.js';
+import { Erc20Token } from './entities/erc20-token.entity.js';
 import { ConfigService } from '@nestjs/config';
 import Web3 from 'web3';
-import chains from '../web3/chains';
-import contractAbi from '../web3/erc20.abi';
+import chains from '../web3/chains.js';
+import contractAbi from '../web3/erc20.abi.js';
 import { Repository } from 'typeorm';
 
 @Injectable()

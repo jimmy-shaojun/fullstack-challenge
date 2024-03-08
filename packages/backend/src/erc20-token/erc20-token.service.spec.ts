@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Erc20TokenService } from './erc20-token.service';
+import { Erc20TokenService } from './erc20-token.service.js';
 import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Erc20Token } from './entities/erc20-token.entity';
-import { Web3Provider } from '../web3/web3.provider';
+import { Erc20Token } from './entities/erc20-token.entity.js';
+import { Web3Provider } from '../web3/web3.provider.js';
 import Web3 from 'web3';
 
 describe('Erc20TokenService', () => {

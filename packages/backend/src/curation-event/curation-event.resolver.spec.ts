@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LogsSubscription } from 'web3-eth-contract';
-import { CurationEventResolver } from './curation-event.resolver';
-import { CurationEventService } from './curation-event.service';
+import { CurationEventResolver } from './curation-event.resolver.js';
+import { CurationEventService } from './curation-event.service.js';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EthBlockService } from '../eth-block/eth-block.service';
-import { Erc20TokenService } from '../erc20-token/erc20-token.service';
-import { Erc20Token } from '../erc20-token/entities/erc20-token.entity';
-import { EthBlock } from '../eth-block/entities/eth-block.entity';
-import { CurationEvent } from './entities/curation-event.entity';
+import { EthBlockService } from '../eth-block/eth-block.service.js';
+import { Erc20TokenService } from '../erc20-token/erc20-token.service.js';
+import { Erc20Token } from '../erc20-token/entities/erc20-token.entity.js';
+import { EthBlock } from '../eth-block/entities/eth-block.entity.js';
+import { CurationEvent } from './entities/curation-event.entity.js';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { Web3Provider } from '../web3/web3.provider';
+import { Web3Provider } from '../web3/web3.provider.js';
 import Web3 from 'web3';
 
 describe('CurationEventResolver', () => {

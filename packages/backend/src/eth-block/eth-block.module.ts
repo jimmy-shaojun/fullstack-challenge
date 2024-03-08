@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { EthBlockService } from './eth-block.service';
-import { EthBlockResolver } from './eth-block.resolver';
+import { EthBlockService } from './eth-block.service.js';
+import { EthBlockResolver } from './eth-block.resolver.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EthBlock } from './entities/eth-block.entity';
-import { Web3Provider } from 'src/web3/web3.provider';
+import { EthBlock } from './entities/eth-block.entity.js';
+import { Web3Provider } from '../web3/web3.provider.js';
 import Web3 from 'web3';
 
 @Module({

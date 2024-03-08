@@ -1,14 +1,23 @@
 {
   "name": "matters-town-curation",
+  "type": "module",
+  "scripts": {
+    "frontend:dev": "cd packages/frontend && npm run dev",
+    "backend:dev": "cd packages/backend && npm run dev --workspaces",
+    "ipfs:prod": "cd packages/ipfs && npm run start:prod",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
   "workspaces": [
     "packages/frontend",
-    "packages/backend"
+    "packages/backend",
+    "packages/ipfs"
   ],
   "dependencies": {
+    "@helia/unixfs": "^3.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
-    "create-next-app": "^14.1.2",
-    "lerna": "^8.1.2"
+    "create-next-app": "^14.1.2"
   }
 }
