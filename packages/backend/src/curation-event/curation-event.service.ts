@@ -116,7 +116,11 @@ export class CurationEventService {
   }
 
   async findOne(id: bigint) {
-    return this.formatAmounts([await this.curationEventRepository.findOneBy({ id })])[0];
+    const curationEvent = await this.curationEventRepository.findOneBy({ id });
+    if (curationEvent) {
+      return this.formatAmounts([curationEvent])[0];
+    }
+    return curationEvent;
   }
 
   async find(sender?: string, receiver?: string,from?: Date, to?: Date) {
