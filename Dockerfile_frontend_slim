@@ -26,8 +26,6 @@ RUN mv .next/standalone/packages/frontend/server.js .
 RUN cp .next/standalone/packages/frontend/package.json ./
 RUN cp .next/standalone/packages/frontend/.env ./
 
-
-
 EXPOSE 3000
 
 ENTRYPOINT [ "node", "server.js" ]
