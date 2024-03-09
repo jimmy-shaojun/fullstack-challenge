@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  graphql_server:
+    image: fullstack-challenge:backend
+    build:
+      dockerfile: Dockerfile_backend
+    environment:
+      # create or update a .env file in the same directory as this file
+      # and fill the below environmenet variables
+      - ETH_HTTPS_RPC_URL=${ETH_HTTPS_RPC_URL}
+      - ETH_WEBSOCKET_RPC_URL=${ETH_WEBSOCKET_RPC_URL}
+      - CURATION_CONTRACT_ADDRESS=0x5edebbdae7B5C79a69AaCF7873796bb1Ec664DB8
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_DB=postgres
+      - DATABASE_LOGGING=true
+    links:
+      - db
+    ports:
+      - 3011:3000
+  frontend:
+    image: fullstack-challenge:frontend
+    build:
+      dockerfile: Dockerfile_frontend
+    environment:
+      # create or update a .env file in the same directory as this file
+      # and fill the below environmenet variables
+      - NEXTJS_PUBLIC_IPFS_URL=${NEXTJS_PUBLIC_IPFS_URL}
+      - GRAPHQL_BACKEND_URL=http://graphql_server:3000/graphql
+    links:
+      - graphql_server
+    ports:
+      - 3010:3000
+  frontend_slim:
+    image: fullstack-challenge:frontend_slim
+    build:
+      dockerfile: Dockerfile_frontend_slim
+    links:
+      - graphql_server
+    ports:
+      - 3013:3000
+  ipfs:
+    image: fullstack-challenge:ipfs
+    build:
+      dockerfile: ./Dockerfile_ipfs
+    ports:
+      - 3012:3002
+volumes:
+  postgres_data:

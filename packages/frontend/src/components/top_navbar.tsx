@@ -7,6 +7,7 @@ export default function TopNavBar() {
     const pathname = usePathname();
     const currentPage = (() => {
       if (pathname === '/') return '/';
+      if (pathname === '/sponsors') return '/sponsors';
       else if (pathname === '/beneficiaries') return '/beneficiaries';
       else if (pathname.startsWith('/curations')) return '/curations';
       else 'others';
@@ -23,9 +24,10 @@ export default function TopNavBar() {
         <NavbarContent className="gap-4" justify="center">
         {
             [
-            ['/', 'Top Sponsors'],
-            ['/beneficiaries', 'Top Beneficiaries'],
-            ['/curations', 'Recent Curations']
+              ['/', 'Home'],
+              ['/sponsors', 'Top Sponsors'],
+              ['/beneficiaries', 'Top Beneficiaries'],
+              ['/curations', 'Recent Curations']
             ].map((link) => {
             return <NavbarItem key={link[0]}>
             <Link href={link[0]} className={ navLinkClassName(link[0]) }>{link[1]}</Link>

@@ -64,7 +64,11 @@ User --- interacts with ---> frontend --- calls GraphQL ---> backend
 
 backend --- use web3.js to get blockchain ---> Polygon mainnet
 
-frontend --- gets curation events with ipfs uri by GraphQL ---> backend
+frontend --- gets curation events by GraphQL ---> backend
+
+User ---- want to view IPFS content from curation events ---- frontend returns IPFS url with `ipfs` prefix
+
+User browse directly from `ipfs` app. 
 
 ### Launch the app
 
@@ -160,6 +164,39 @@ You may use the following .vscode/launch.json
         }
     ]
 }
+```
+
+### Docker and Docker-Compose
+
+Two docker-compose files are provided.
+1. compose.yml for you to start a postgres database
+2. compose-fullstack.yml for you to start 
+* an instance of postgres database name `db`, 
+* an instance of backend named `graphql_server`, 
+* two instances of frotnend called `frontend` and `frontend_slim`,
+* an instance of ipfs called `ipfs`.
+
+`frontend` is the instance that runs nextjs app in dev mode and the image size is more than 1.7GB.
+
+`frontend_slim` is the instance that runs nextjs app in prod mode and the image size is aroud 380MB.
+
+To start compose-fullstack.yml, you will need a .env file in the same directory as compose-fullstack.yml
+
+An example of such .env is as below
+
+```
+ETH_HTTPS_RPC_URL=https://polygon-mainnet.infura.io/v3/{api_key}
+ETH_WEBSOCKET_RPC_URL=wss://polygon-mainnet.infura.io/ws/v3/{api_key}
+
+NEXTJS_PUBLIC_IPFS_URL=http://{ip of your docker host}:3012/cat/
+```
+
+To get `frontend_slim` correct, you will need to modify `Dockerfile_frontend_slim` file and replace the `debian.local` with the ip address of your docker host. Otherwise, you won't be able to view IPFS content if you visit web app served by `frontend_slim`
+
+```
+RUN echo "NEXTJS_PUBLIC_IPFS_URL=http://debian.local:3012/cat/" >> ./packages/frontend/.env
+RUN echo "GRAPHQL_BACKEND_URL=http://graphql_server:3000/graphql" >> ./packages/frontend/.env
+
 ```
 
 ## Written Challenge

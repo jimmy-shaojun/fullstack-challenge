@@ -1,0 +1,23 @@
+FROM node:20.11.1-bullseye-slim as builder
+RUN mkdir -p /home/app/
+WORKDIR /home/app/
+COPY . .
+RUN rm -rf node_modules || true
+RUN rm -rf packages/ipfs || true
+RUN rm -rf packages/frontend || true
+RUN npm install
+RUN rm ./packages/backend/.env || true
+RUN rm ./packages/backend/.env.* || true
+RUN npm run build
+
+FROM node:20.11.1-bullseye-slim
+RUN mkdir -p /home/app/packages/backend
+WORKDIR /home/app/
+COPY --from=builder /home/app/packages/backend /home/app/packages/backend
+COPY --from=builder /home/app/package.json /home/app/package.json
+COPY --from=builder /home/app/package-lock.json /home/app/package-lock.json
+RUN npm install --omit=dev
+
+EXPOSE 3000
+
+ENTRYPOINT [ "node", "packages/backend/dist/src/main.js" ]

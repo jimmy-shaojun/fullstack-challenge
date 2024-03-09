@@ -25,12 +25,14 @@ function queryStatsFor(type: 'sponsor' | 'beneficiary') {
 }
 
 export default async function TopNUsers(props:any) {
+    const searchParams = props.searchParams;
     const queryType = props.type
     const daysAgo = Number(props.daysAgo);
     const query = queryStatsFor(queryType);
     const toDate = new Date();
     const fromDate = new Date(toDate);
-    const limit = Number(props.limit);
+    const limit = searchParams.no_limit ? 100 : Number(props.limit);
+
     fromDate.setDate(toDate.getDate() - daysAgo);
 
     const client = getApolloClientServerSide();
