@@ -13,9 +13,6 @@
     "packages/backend",
     "packages/ipfs"
   ],
-  "dependencies": {
-    "@helia/unixfs": "^3.0.1"
-  },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
     "create-next-app": "^14.1.2"

@@ -1,0 +1,31 @@
+FROM node:20.11.1-bullseye-slim as builder
+RUN mkdir -p /home/app/
+WORKDIR /home/app
+COPY . .
+RUN rm -rf node_modules || true
+RUN rm -rf packages/backend || true
+RUN rm -rf packages/ipfs || true
+RUN rm -rf packages/frontend/.next || true
+RUN npm install
+RUN rm ./packages/frontend/.env || true
+RUN rm ./packages/frontend/.env.* || true
+RUN rm ./packages/frontend/.next || true
+RUN echo "NEXTJS_PUBLIC_IPFS_URL=http://debian.local:3012/cat/" >> ./packages/frontend/.env
+RUN echo "GRAPHQL_BACKEND_URL=http://graphql_server:3000/graphql" >> ./packages/frontend/.env
+RUN npm run build
+RUN rm -rf ./packages/frontend/.next/cache/fetch-cache/*
+
+FROM node:20.11.1-bullseye-slim
+RUN mkdir -p /home/app/
+WORKDIR /home/app
+RUN mkdir -p /home/app/public && mkdir -p /home/app/.next
+COPY --from=builder /home/app/packages/frontend/.next /home/app/.next
+COPY --from=builder /home/app/packages/frontend/public /home/app/public
+RUN mv .next/standalone/node_modules .
+RUN mv .next/standalone/packages/frontend/server.js .
+RUN cp .next/standalone/packages/frontend/package.json ./
+RUN cp .next/standalone/packages/frontend/.env ./
+
+EXPOSE 3000
+
+ENTRYPOINT [ "node", "server.js" ]

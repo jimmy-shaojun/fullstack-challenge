@@ -1,0 +1,78 @@
+name: Docker build of frontend/backend/ipfs
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  nodejs-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run test
+      
+  docker-build:
+    runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      - uses: actions/checkout@v4
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+      -
+        name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: Dockerfile_frontend
+          tags: localhost:5000/fullstack-challenge:frotntend
+      -
+        name: Build and push frontend_slim
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: Dockerfile_frontend_slim
+          tags: localhost:5000/fullstack-challenge:frotntend_slim
+      -
+        name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: Dockerfile_backend
+          tags: localhost:5000/fullstack-challenge:backend
+      -
+        name: Build and push ipfs
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: Dockerfile_ipfs
+          tags: localhost:5000/fullstack-challenge:ipfs
+      -
+        name: Pull frontend image down successfully
+        run: docker pull localhost:5000/fullstack-challenge:frotntend
+      -
+        name: Pull frontend_slim image down successfully
+        run: docker pull localhost:5000/fullstack-challenge:frotntend_slim
+      -
+        name: Pull backend image down successfully
+        run: docker pull localhost:5000/fullstack-challenge:backend
+      -
+        name: Pull ipfs image down successfully
+        run: docker pull localhost:5000/fullstack-challenge:ipfs

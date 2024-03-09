@@ -10,8 +10,6 @@ import { EthBlockModule } from './eth-block/eth-block.module.js';
 import { BigIntScalar } from './graphql/scalars/bigint.scalar.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceConfig } from './data-source.js';
-import { IpfsController } from './ipfs.controller.js';
-import { IpfsService } from './ipfs.service.js';
 
 @Module({
   imports: [
@@ -31,7 +29,7 @@ import { IpfsService } from './ipfs.service.js';
     Erc20TokenModule,
     EthBlockModule,
   ],
-  controllers: [AppController, IpfsController],
-  providers: [AppService, IpfsService, BigIntScalar],
+  controllers: [AppController],
+  providers: [AppService, BigIntScalar],
 })
 export class AppModule {}
