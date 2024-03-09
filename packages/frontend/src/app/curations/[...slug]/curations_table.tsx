@@ -45,7 +45,7 @@ export default function CurationsTable(props: any) {
             ${beneficiaryAddress?("to "+beneficiaryAddress+" "):""}for past`}
             <select name="daysAgo" value={daysAgo} onChange={handleSearchDaysChange}>       
               { 
-              [90, 120, 150, 180, 365].map((days) => {
+              [90, 120, 150, 180, 365, 730, 1095].map((days) => {
                 return <option key={`daysAgo${days}`} value={days}>{days}</option>  
               })
               }
@@ -118,7 +118,7 @@ export default function CurationsTable(props: any) {
             <>
                 <ModalHeader>
                     { selectedCuration && selectedCuration.uri } got reward {selectedCuration.formattedAmount} from this content on {displayLocalDate(selectedCuration.date)}.
-                    <Link href={formatIpfsUrl(selectedCuration.uri)} target="_blank"><Button>Open in new window</Button></Link>
+                    <Link href={formatIpfsUrl(selectedCuration.uri)} isExternal showAnchorIcon><Button>Open in new window</Button></Link>
                 </ModalHeader>
                 <ModalBody>
                     <iframe className="flex-1 h-full" src={ formatIpfsUrl(selectedCuration.uri) }></iframe>

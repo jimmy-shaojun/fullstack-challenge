@@ -31,7 +31,7 @@ export default async function TopNUsers(props:any) {
     const query = queryStatsFor(queryType);
     const toDate = new Date();
     const fromDate = new Date(toDate);
-    const limit = searchParams.no_limit ? 100 : Number(props.limit);
+    const limit = Number(props.limit);
 
     fromDate.setDate(toDate.getDate() - daysAgo);
 

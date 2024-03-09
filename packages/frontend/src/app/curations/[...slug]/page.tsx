@@ -10,11 +10,23 @@ export interface CurationsParams {
 
 export default async function Curations({ params, searchParams }: CurationsParams) {
 
+  const getSponsor = (slug: string[] | undefined) => {
+    if (slug === undefined || slug.length == 0) return undefined;
+    if (slug[0] === 'any')return undefined;
+    return slug[0]
+  }
+
+  const getBeneficiary = (slug: string[] | undefined) => {
+    if (slug === undefined || slug.length <= 1) return undefined;
+    if (slug[1] === 'any')return undefined;
+    return slug[1]
+  }
+
   const slug = params.slug;
-  const sponsorAddress = slug.length > 0 ? slug[0] : undefined;
-  const beneficiaryAddress = slug.length > 1 ? slug[1] : undefined;
+  const sponsorAddress = getSponsor(slug);
+  const beneficiaryAddress = getBeneficiary(slug);
   const daysAgoRaw = Number(searchParams['daysAgo']);
-  const daysAgo = Math.min(isNaN(daysAgoRaw)?180:daysAgoRaw, 365);
+  const daysAgo = Math.min(isNaN(daysAgoRaw)?180:daysAgoRaw, 1095);
   const toDate = new Date();
   const fromDate = new Date(toDate);
   const IPFX_PREFIX = process.env.NEXTJS_PUBLIC_IPFS_URL;
