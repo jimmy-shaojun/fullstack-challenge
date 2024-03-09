@@ -29,28 +29,28 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: Dockefile_frontend
+          file: Dockerfile_frontend
           tags: localhost:5000/fullstack-challenge:frotntend
       -
         name: Build and push frontend_slim
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: Dockefile_frontend_slim
+          file: Dockerfile_frontend_slim
           tags: localhost:5000/fullstack-challenge:frotntend_slim
       -
         name: Build and push backend
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: Dockefile_backend
+          file: Dockerfile_backend
           tags: localhost:5000/fullstack-challenge:backend
       -
         name: Build and push ipfs
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: Dockefile_ipfs
+          file: Dockerfile_ipfs
           tags: localhost:5000/fullstack-challenge:ipfs
       -
         name: Pull frontend image down successfully
