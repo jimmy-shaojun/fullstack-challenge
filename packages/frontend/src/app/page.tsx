@@ -1,7 +1,7 @@
 import TopNavBar from "@/components/top_navbar";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
-import { Code } from "@nextui-org/code";
 import { Divider } from "@nextui-org/divider";
+import { Snippet } from "@nextui-org/snippet";
 
 export default function Home() {
   return (
@@ -39,22 +39,40 @@ export default function Home() {
                 </Card>
               </div>
             </div>
-          <Code>
-            Two docker-compose files are provided.
-          </Code>
-          <Code>
-            1. compose.yml for you to start a postgres database
-          </Code>
-          <Code>
-            2. compose-fullstack.yml for you to start 
-            an instance of postgres database name `db`, 
-            an instance of backend named `graphql_server`, 
-            two instances of frotnend called `frontend` and `frontend_slim`,
-            an instance of ipfs called `ipfs`.
-          </Code>
-          <Code>
-            Check README.md for more details.
-          </Code>
+        </div>
+        <div className="align-top">
+        <p>
+          Two docker-compose files are provided.
+        </p>
+        <p>
+          There is compose.yml for you to start a postgres database
+        </p>
+        <p>
+          <ul className="list-inside list-disc">
+            There is also compose-fullstack.yml for you to start 
+          <li>an instance of postgres database name `db`, </li>
+          <li>an instance of backend named `graphql_server`, </li>
+          <li>two instances of frotnend called `frontend` and `frontend_slim`,</li>
+          <li>an instance of ipfs called `ipfs`.</li>
+          </ul>
+        </p>
+        <p>
+          Following command will start a postgres instance with ./pgdata to store its data.
+        </p>
+        <p>
+          <Snippet>
+            docker-compose -f compose.yml up
+          </Snippet>
+        </p>
+        <p>
+          Following command will start database, frontend, backend and ipfs.
+          Please note that `compose-fullstack` will start a new postgres instance which is different from the one created by compose.yml
+        </p>
+        <p>
+        <Snippet>
+          docker-compose -f compose-fullstack.yml up
+        </Snippet>
+        </p>
         </div>
       </div>
     </main>
