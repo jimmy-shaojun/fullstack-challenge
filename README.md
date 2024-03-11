@@ -60,7 +60,7 @@ This app consists of four components
 * frontend - a next.js frontend app
 * common - the generated GraphQL schema
 
-![](./system_design.svg?raw=true)
+![](./system_design.png?raw=true)
 
 User --- interacts with ---> frontend --- calls GraphQL ---> backend
 
