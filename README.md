@@ -60,6 +60,8 @@ This app consists of four components
 * frontend - a next.js frontend app
 * common - the generated GraphQL schema
 
+![](./system_design.png?raw=true)
+
 User --- interacts with ---> frontend --- calls GraphQL ---> backend
 
 backend --- use web3.js to get blockchain ---> Polygon mainnet
