@@ -10,6 +10,7 @@ services:
   graphql_server:
     image: fullstack-challenge:backend
     build:
+      context: .
       dockerfile: Dockerfile_backend
     environment:
       # create or update a .env file in the same directory as this file
@@ -30,6 +31,7 @@ services:
   frontend:
     image: fullstack-challenge:frontend
     build:
+      context: .
       dockerfile: Dockerfile_frontend
     environment:
       # create or update a .env file in the same directory as this file
@@ -46,6 +48,7 @@ services:
     # as fullstack-challenge:frontend_slim need these two variables during image build time
     image: fullstack-challenge:frontend_slim
     build:
+      context: .
       dockerfile: Dockerfile_frontend_slim
     links:
       - graphql_server
@@ -54,6 +57,7 @@ services:
   ipfs:
     image: fullstack-challenge:ipfs
     build:
+      context: .
       dockerfile: ./Dockerfile_ipfs
     ports:
       - 3012:3002
