@@ -3,8 +3,7 @@ RUN mkdir -p /home/app/
 WORKDIR /home/app
 COPY . .
 RUN rm -rf node_modules || true
-RUN rm -rf packages/backend || true
-RUN rm -rf packages/ipfs || true
+RUN find ./packages -mindepth 1 -maxdepth 1 -type d | grep -Ev './(packages/frontend)' | xargs rm -r
 RUN rm -rf packages/frontend/.next || true
 RUN npm install
 RUN rm ./packages/frontend/.env || true
